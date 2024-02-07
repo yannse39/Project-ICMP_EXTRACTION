@@ -2,8 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "icmp_server.c"
-#include "icmp_client.c"
+#include "icmp_server.h"
+#include "icmp_client.h"
 
 
 void printHelp()
@@ -12,11 +12,11 @@ void printHelp()
          "(server), it's the default value\n");
   printf("-s, --client <SERVER IP>             run the binary as a client"
          "(client)\n");
-  printf("-f, --file <file path>              Only for slave: specify the data "
+  printf("-f, --file <file path>              Only for client: specify the data "
          "file\n");
   printf("                                    Incompatible with -d, "
          "--directory\n");
-  printf("-d, --directory <directory path>    Only for slave: specify a "
+  printf("-d, --directory <directory path>    Only for client: specify a "
          "directory, each file in the specified directory must be extracted "
          "(not recursively)\n");
   printf("                                    Incompatible with -f, --file\n");
@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
 {
   if (argc == 1)
   {
-    printf("Syntax Error: le script doit avoir au moins un arguemnt ! See help "
+    printf("Erreur: le script doit avoir au moins un arguemnt ! Consulter l'aide "
            "(--help or -h) for usage.\n");
   }
   else if (argc >= 2)
@@ -39,22 +39,22 @@ int main(int argc, char *argv[])
       // affiche l'aide
       printHelp();
     }
-    else if (strcmp(arg, "-m") == 0 || strcmp(arg, "--master") == 0)
+    else if (strcmp(arg, "-m") == 0 || strcmp(arg, "--server_master") == 0)
     {
-      // exécute le mode MASTER
+      // exécute le icmp_server
       int result = icmp_server();
       if (result == 0)
       {
-        printf("Le mode maître s'est exécuté avec succès.\n");
+        printf("Icmp_server s'est exécuté avec succès. :)\n");
       }
       else
       {
-        printf("Erreur lors de l'exécution du mode maître.\n");
+        printf("Erreur lors du lancement du icmp_server.\n");
       }
     }
-    else if (strcmp(arg, "-s") == 0 || strcmp(arg, "--slave") == 0)
+    else if (strcmp(arg, "-s") == 0 || strcmp(arg, "--service") == 0)
     {
-      // vérifie les arguments pour le mode SLAVE
+      // vérifie les arguments pour le mode client
       if (argc >= 3)
       {
         const char *serverIP = argv[2];
@@ -70,11 +70,11 @@ int main(int argc, char *argv[])
           int result = icmp_client(serverIP, fileName);
           if (result == 0)
           {
-            printf("Le mode slave s'est exécuté avec succès.\n");
+            printf("Le mode client s'est exécuté avec succès.\n");
           }
           else
           {
-            printf("Erreur lors de l'exécution du mode slave.\n");
+            printf("Erreur lors de l'exécution du mode client.\n");
           }
         }
         else if (argc >= 4
@@ -90,11 +90,11 @@ int main(int argc, char *argv[])
           int result = icmp_client(serverIP, fileName);
           if (result == 0)
           {
-            printf("Le mode slave s'est exécuté avec succès.\n");
+            printf("Le mode client s'est exécuté avec succès. :)\n");
           }
           else
           {
-            printf("Erreur lors de l'exécution du mode slave.\n");
+            printf("Erreur lors de l'exécution du mode client. :)\n");
           }
         }
         else
@@ -104,7 +104,7 @@ int main(int argc, char *argv[])
       }
       else
       {
-        printf("Veuillez spécifier l'adresse IP du maître.\n");
+        printf("Veuillez spécifier l'adresse IP du master.\n");
       }
     }
     else
